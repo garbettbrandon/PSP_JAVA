@@ -1,0 +1,46 @@
+package psp_argumentos;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+public class Repaso7_2 {
+
+	public static void main(String[] args) throws IOException {
+
+		File directorio = new File(".\\bin");
+		ProcessBuilder pb = new ProcessBuilder("java", "psp_argumentos.Repaso7");
+		pb.directory(directorio);
+		// Se ejecuta el proceso
+		Process p = pb.start();
+
+		// escritura
+		OutputStream os = p.getOutputStream();
+		os.write("Hola Carlos\n".getBytes());
+		os.flush();
+		os.write("Hola Jose\n".getBytes());
+		os.flush();
+		os.write("*\n".getBytes());
+		os.flush();
+		os.write("\n".getBytes());
+		os.flush();
+
+		InputStream is = p.getInputStream();
+		int c;
+		while ((c = is.read()) != -1)
+			System.out.print((char) c);
+		is.close();
+
+		// COMPROBACION DE ERROR - 0 bien - 1 mal
+		int exitVal;
+		try {
+			exitVal = p.waitFor();
+			System.out.println("Valor de Salida: " + exitVal);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+}
